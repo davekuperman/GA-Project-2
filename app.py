@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, flash
+import re
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'i like turtles'
@@ -32,8 +34,8 @@ def shipper():
             flash('first Name error', category='error')
         elif len(lastName) < 2:
             flash('last Name error', category='error')
-        elif len(email) < 4:
-            flash('email error', category='error')
+        elif not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            flash('Invalid email address', category='error')
         elif len(phone) < 10:
             flash('phone error', category='error')
         elif len(companyName) < 3:
