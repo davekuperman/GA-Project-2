@@ -1,5 +1,16 @@
-from flask import Flask, render_template, request, flash
+from flask import (
+    Flask, 
+    flash,
+    redirect,
+    render_template, 
+    request,
+    session 
+)
 import re
+from models.users import create_shipper, create_carrier
+
+
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
@@ -25,10 +36,11 @@ def shipper():
         firstName = request.form.get('firstName')
         lastName = request.form.get('lastName')
         email = request.form.get('email')
-        phone =  request.form.get('phoneNumber')
+        phoneNumber =  request.form.get('phoneNumber')
         companyName = request.form.get('companyName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
+        
 
         if len(firstName) < 2:
             flash('first Name error', category='error')
@@ -36,13 +48,15 @@ def shipper():
             flash('last Name error', category='error')
         elif not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             flash('Invalid email address', category='error')
-        elif len(phone) < 10:
+        elif len(phoneNumber) < 10:
             flash('phone error', category='error')
         elif len(companyName) < 3:
             flash('company Name error', category='error')
         elif password1 != password2:
             flash('passwords do not match', category='error')
         else:
+            password_hash = generate_password_hash(password1)
+            create_shipper(firstName,lastName, email, phoneNumber, companyName, password_hash)
             flash('Account created!', category='success')
 
     return render_template ('ssignup.html')
@@ -50,4 +64,36 @@ def shipper():
 
 @app.route('/carrier_signup', methods = ['GET', 'POST'])
 def carrier():
+    if request.method == 'POST':
+        firstName = request.form.get('firstName')
+        lastName = request.form.get('lastName')
+        email = request.form.get('email')
+        phoneNumber =  request.form.get('phoneNumber')
+        companyName = request.form.get('companyName')
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
+        
+
+        if len(firstName) < 2:
+            flash('first Name error', category='error')
+        elif len(lastName) < 2:
+            flash('last Name error', category='error')
+        elif not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            flash('Invalid email address', category='error')
+        elif len(phoneNumber) < 10:
+            flash('phone error', category='error')
+        elif len(companyName) < 3:
+            flash('company Name error', category='error')
+        elif password1 != password2:
+            flash('passwords do not match', category='error')
+        else:
+            password_hash = generate_password_hash(password1)
+            create_carrier(firstName,lastName, email, phoneNumber, companyName, password_hash)
+            flash('Account created!', category='success')
+            return redirect('/login')
+    
+
     return render_template ('csignup.html')
+
+if __name__ == "__main__":
+    app.run
