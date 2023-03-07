@@ -7,7 +7,7 @@ from flask import (
     session 
 )
 import re
-from models.users import create_shipper, create_carrier, get_shipper_by_email, get_carrier_by_email
+from models.users import create_shipper, create_carrier, get_shipper_by_email, get_carrier_by_email, update_carrier_profile
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -44,6 +44,7 @@ def login():
         if user:
             session['user_firstName'] = user['firstname']
             session['user_type'] = user_type
+            session['user_email'] = user['email']
             if user_type == 'shipper':
                 return redirect('/shipper_dashboard')
             elif user_type == 'carrier':
@@ -58,11 +59,45 @@ def logout():
     session.clear()
     return redirect('/')
 
-@app.route('/carrier_dashboard')
+@app.route('/carrier_dashboard',methods = ['GET', 'POST'])
 def carrierDash():
     if 'user_firstName' not in session or session['user_type'] != 'carrier':
         return redirect('/login')
     return render_template ('carrier_dash.html')
+
+
+
+@app.route('/carrier_update', methods = ['GET', 'POST'])
+def update_carrier():
+    
+    if 'user_firstName' not in session or session['user_type'] != 'carrier':
+        return redirect('/login')
+    
+    if request.method == 'POST':
+        firstname = request.form.get('firstName')
+        lastname = request.form.get('lastName')
+        phonenumber = request.form.get('phoneNumber')
+        companyname = request.form.get('companyName')
+   
+        if len(firstname) < 2:
+            flash('first Name error', category='error')
+        elif len(lastname) < 2:
+            flash('last Name error', category='error')
+        elif len(phonenumber) < 10:
+            flash('phone error', category='error')
+        elif len(companyname) < 3:
+            flash('company Name error', category='error')
+        else:
+            email = session['user_email']
+            update_carrier_profile(email, firstname, lastname, phonenumber, companyname)
+            flash('Profile updated successfully', category='success')
+            # return reid
+
+    print(session)
+
+    return render_template ('carrier_update_profile.html')
+    # return render_template('/carrier_update_profile.html')
+
 
 @app.route('/shipper_dashboard')
 def shipperDash():
@@ -130,7 +165,6 @@ def carrier():
             flash('Account created!', category='success')
             return redirect('/login')
     
-
     return render_template ('csignup.html')
 
 if __name__ == "__main__":
