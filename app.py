@@ -7,11 +7,8 @@ from flask import (
     session 
 )
 import re
-from models.users import create_shipper, create_carrier
-
-
+from models.users import create_shipper, create_carrier, get_shipper_by_email, get_carrier_by_email
 from werkzeug.security import generate_password_hash, check_password_hash
-
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'i like turtles'
@@ -26,9 +23,52 @@ def signup():
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-    data = request.form
-    print(data)
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = None
+        user_type = None
+
+        #check if email and password match a shipper account
+        shipper = get_shipper_by_email(email)
+        if shipper and check_password_hash(shipper['password_hash'], password):
+            user = shipper
+            user_type = 'shipper'
+
+        #check if email and password match a carrier account
+        carrier = get_carrier_by_email(email)       
+        if carrier and check_password_hash(carrier['password_hash'], password):
+            user = carrier
+            user_type = 'carrier' 
+        
+        if user:
+            session['user_firstName'] = user['firstname']
+            session['user_type'] = user_type
+            if user_type == 'shipper':
+                return redirect('/shipper_dashboard')
+            elif user_type == 'carrier':
+                return redirect('/carrier_dashboard')
+
+        flash('Invalid email or password', category='error')
+
     return render_template ('login.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
+
+@app.route('/carrier_dashboard')
+def carrierDash():
+    if 'user_firstName' not in session or session['user_type'] != 'carrier':
+        return redirect('/login')
+    return render_template ('carrier_dash.html')
+
+@app.route('/shipper_dashboard')
+def shipperDash():
+    if 'user_firstName' not in session or session['user_type'] != 'shipper':
+        return redirect('/login')
+    return render_template ('shipper_dash.html')
 
 @app.route('/shipper_signup', methods = ['GET', 'POST'])
 def shipper():
@@ -41,7 +81,6 @@ def shipper():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
         
-
         if len(firstName) < 2:
             flash('first Name error', category='error')
         elif len(lastName) < 2:
@@ -59,8 +98,7 @@ def shipper():
             create_shipper(firstName,lastName, email, phoneNumber, companyName, password_hash)
             flash('Account created!', category='success')
 
-    return render_template ('ssignup.html')
-
+    return render_template ('ssignup.html')  
 
 @app.route('/carrier_signup', methods = ['GET', 'POST'])
 def carrier():

@@ -4,43 +4,66 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>FIND A SUBBY {%block title%}{%endblock%}</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="/static/main_style.css">
-    </head>
-    <body>
-        
-        <h1>FIND A SUBBY</h1>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-            {% if category == 'error' %}
-            <div class="alert error" role="alert">
-                {{ message }}
-               
-            </div>
-            {% else %}
-            <div class="alert success" role="alert">
-                {{ message }}
-               
-            </div>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>FIND A SUBBY {%block title%}{%endblock%}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/main_style.css">
+</head>
+
+<body>
+
+    <h1>FIND A SUBBY</h1>
+    <nav>
+        <ul>
+            {% if session.user_type == 'shipper' %}
+            <li><a href="/shipper_dashboard">Shipper Dashboard</a></li>
+            {% elif session.user_type == 'carrier' %}
+            <li><a href="/carrier_dashboard">Carrier Dashboard</a></li>
             {% endif %}
-            {% endfor %}
-        {% endif %}
-        
-        {%endwith%}
-        {%block main%}
-        <!--[if lt IE 7]>
+            {% if 'user_firstName' in session %}
+            <li><a href="/logout">Log out</a></li>
+            {% else %}
+            {% if not request.path == '/login' %}
+            <li><a href="/login">Log in</a></li>
+            {% endif %}
+            {% if not request.path == '/signup' %}
+            <li><a href="/signup">Sign up</a></li>
+            {% endif %}
+            {% endif %}
+        </ul>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    {% if category == 'error' %}
+    <div class="alert error" role="alert">
+        {{ message }}
+
+    </div>
+    {% else %}
+    <div class="alert success" role="alert">
+        {{ message }}
+
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+    {%endwith%}
+    {%block main%}
+    <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
             <![endif]-->
-           
-            
-            
-            <script src="" async defer></script>
-            {%endblock%}
-    </body>
+
+
+
+    <script src="" async defer></script>
+    {%endblock%}
+</body>
+
 </html>
