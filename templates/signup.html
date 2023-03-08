@@ -2,16 +2,18 @@
 {% block title%}SIGN UP {%endblock%}
 
 {%block main%}
-
-<h1>Sign up</h1>
-<p>Are you a</p>
-<form action="/shipper_signup">
-    <button type="submit">Shipper</button>
-</form>
-<p>or</p>
-<form action="/carrier_signup">
-    <button type="submit">Carrier</button>
-</form>
-
+<div class="container">
+    <div class="form-container">
+        <h1>Sign up</h1>
+        <p>Are you a</p>
+        <form action="/shipper_signup">
+            <button type="submit">Shipper</button>
+        </form>
+        <p>or</p>
+        <form action="/carrier_signup">
+            <button type="submit">Carrier</button>
+        </form>
+    </div>
+</div>
 
 {%endblock%}

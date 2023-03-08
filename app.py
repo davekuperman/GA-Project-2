@@ -7,7 +7,7 @@ from flask import (
     session 
 )
 import re
-from models.users import create_shipper, create_carrier, get_shipper_by_email, get_carrier_by_email, update_carrier_profile
+from models.users import create_shipper, create_carrier, get_shipper_by_email, get_carrier_by_email, update_carrier_profile, delete_carrier_profile
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -65,8 +65,6 @@ def carrierDash():
         return redirect('/login')
     return render_template ('carrier_dash.html')
 
-
-
 @app.route('/carrier_update', methods = ['GET', 'POST'])
 def update_carrier():
     
@@ -97,6 +95,18 @@ def update_carrier():
 
     return render_template ('carrier_update_profile.html')
     # return render_template('/carrier_update_profile.html')
+
+@app.route('/delete_carrier', methods = ['GET', 'POST'])
+def delete_carrier():
+    if 'user_firstName' not in session or session['user_type'] != 'carrier':
+        return redirect('/login')
+    
+    email = session['user_email']
+    delete_carrier_profile(email)
+    session.clear()
+    flash('Your account has been deleted', category='success')
+    return redirect('/')
+
 
 
 @app.route('/shipper_dashboard')
@@ -146,7 +156,6 @@ def carrier():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
         
-
         if len(firstName) < 2:
             flash('first Name error', category='error')
         elif len(lastName) < 2:
