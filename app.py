@@ -8,7 +8,7 @@ from flask import (
 )
 import re
 import database
-from models.users import create_shipper, create_carrier, get_shipper_by_email, get_carrier_by_email, update_carrier_profile, delete_carrier_profile
+from models.users import create_shipper, create_carrier, get_shipper_by_email, get_carrier_by_email, update_carrier_profile, delete_carrier_profile, get_carrier_by_id
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -90,12 +90,22 @@ def update_carrier():
             email = session['user_email']
             update_carrier_profile(email, firstname, lastname, phonenumber, companyname)
             flash('Profile updated successfully', category='success')
-            # return reid
+        
 
     print(session)
 
     return render_template ('carrier_update_profile.html')
     # return render_template('/carrier_update_profile.html')
+
+@app.route('/carrier_profile')
+def carrier_profile():
+    if 'user_firstName' not in session or session['user_type'] != 'shipper':
+        return redirect('/login')
+    
+    id = request.args.get('id')
+
+    carrier = get_carrier_by_id(id)
+    return render_template('carrier_profile.html', carrier = carrier)
 
 @app.route('/delete_carrier', methods = ['GET', 'POST'])
 def delete_carrier():
