@@ -17,18 +17,20 @@
 
 <body class="d-flex align-items-center">
 
-    <div class="container text-center">
-        <div>
-            <h1 class="position-absolute top-0 start-0">FRELPER</h1>
+    <div class="container text-center row">
+        <div class="col align-self-left">
+            <img src="/static/images/truck_nobackground.png" alt="yellow truck logo" srcset="" width="150px">
         </div>
-        <div>
+        <div class="col align-self">
+            <h1 class="align-self-center">FRELPER</h1>
+        </div>
+        <div class="'col-12">
             <nav class="mb-4">
                 <ul class="nav justify-content-center">
                     {% if 'user_firstName' in session %}
                     <li class="nav-item ">
                         <p class="nav-link">Logged in as {{ session['user_firstName'] }}</p>
-                    </li>
-                    <li class="nav-item">
+
                         <button class="btn btn-primary"><a class="text-white" href="/logout">Log out</a></button>
                     </li>
                     {% else %}

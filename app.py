@@ -7,6 +7,7 @@ from flask import (
     session 
 )
 import re
+import database
 from models.users import create_shipper, create_carrier, get_shipper_by_email, get_carrier_by_email, update_carrier_profile, delete_carrier_profile
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -107,13 +108,13 @@ def delete_carrier():
     flash('Your account has been deleted', category='success')
     return redirect('/')
 
-
-
 @app.route('/shipper_dashboard')
 def shipperDash():
     if 'user_firstName' not in session or session['user_type'] != 'shipper':
         return redirect('/login')
-    return render_template ('shipper_dash.html')
+    
+    carriers = database.select_many('SELECT * FROM carriers')
+    return render_template ('shipper_dash.html', carriers=carriers)
 
 @app.route('/shipper_signup', methods = ['GET', 'POST'])
 def shipper():
