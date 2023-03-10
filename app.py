@@ -6,13 +6,16 @@ from flask import (
     request,
     session 
 )
-import re
-import database
+
+
 from models.users import create_shipper, create_carrier, get_shipper_by_email, get_carrier_by_email, update_carrier_profile, delete_carrier_profile, get_carrier_by_id
 from werkzeug.security import generate_password_hash, check_password_hash
+import re, database
+import cloudinary.uploader
+
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'i like turtles'
+
 
 @app.route('/')
 def index():
@@ -73,6 +76,9 @@ def update_carrier():
         return redirect('/login')
     
     if request.method == 'POST':
+        image = request.files.get('profile_pic')
+        uploaded_image = cloudinary.uploader.upload(image)
+        profile_pic = uploaded_image['url']
         firstname = request.form.get('firstName')
         lastname = request.form.get('lastName')
         phonenumber = request.form.get('phoneNumber')
@@ -88,7 +94,7 @@ def update_carrier():
             flash('company Name error', category='error')
         else:
             email = session['user_email']
-            update_carrier_profile(email, firstname, lastname, phonenumber, companyname)
+            update_carrier_profile(email, firstname, lastname, phonenumber, companyname, profile_pic)
             flash('Profile updated successfully', category='success')
         
 
@@ -159,6 +165,7 @@ def shipper():
 @app.route('/carrier_signup', methods = ['GET', 'POST'])
 def carrier():
     if request.method == 'POST':
+
         firstName = request.form.get('firstName')
         lastName = request.form.get('lastName')
         email = request.form.get('email')
@@ -166,6 +173,10 @@ def carrier():
         companyName = request.form.get('companyName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
+        #uploading picture 
+        image = request.files.get('profile_pic')
+        uploaded_image = cloudinary.uploader.upload(image)
+        profile_pic = uploaded_image['url']
         
         if len(firstName) < 2:
             flash('first Name error', category='error')
@@ -181,7 +192,7 @@ def carrier():
             flash('passwords do not match', category='error')
         else:
             password_hash = generate_password_hash(password1)
-            create_carrier(firstName,lastName, email, phoneNumber, companyName, password_hash)
+            create_carrier(firstName,lastName, email, phoneNumber, companyName, password_hash, profile_pic)
             flash('Account created!', category='success')
             return redirect('/login')
     
