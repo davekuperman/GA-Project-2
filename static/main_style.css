@@ -1,3 +1,8 @@
+body {
+    margin: 0 auto;
+    max-width: 1000px;
+  }
+
 .error {
     color: red;
 
@@ -9,4 +14,8 @@
 #frelper{
     font-size: 70px;    
     border-top: 10px;
+}
+
+#profile_pics{
+    transform: scale(0.25);
 }

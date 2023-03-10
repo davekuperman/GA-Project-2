@@ -11,10 +11,14 @@ from flask import (
 from models.users import create_shipper, create_carrier, get_shipper_by_email, get_carrier_by_email, update_carrier_profile, delete_carrier_profile, get_carrier_by_id
 from werkzeug.security import generate_password_hash, check_password_hash
 import re, database
+from cloudinary import CloudinaryImage
 import cloudinary.uploader
+import os
+
 
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
 
 @app.route('/')
