@@ -16,11 +16,8 @@ from cloudinary import CloudinaryImage
 import cloudinary.uploader
 import os
 
-
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-
 
 @app.route('/')
 def index():
@@ -69,6 +66,7 @@ def logout():
     session.clear()
     return redirect('/')
 
+#ROUTES RELATING TO CARRIER
 @app.route('/carrier_signup', methods = ['GET', 'POST'])
 def carrier():
     if request.method == 'POST':
@@ -105,12 +103,13 @@ def carrier():
     
     return render_template ('csignup.html')
 
-
 @app.route('/carrier_dashboard',methods = ['GET', 'POST'])
 def carrierDash():
     if 'user_firstName' not in session or session['user_type'] != 'carrier':
         return redirect('/login')
-    return render_template ('carrier_dash.html')
+        
+    shipper_jobs = database.select_many('SELECT jobs.id, shippers.companyname,shippers.email, jobs.type, jobs.weight, jobs.pick_up, jobs.drop_off, jobs.suburb, jobs.state FROM jobs JOIN shippers ON jobs.shipper_id = shippers.id;')
+    return render_template ('carrier_dash.html', shipper_jobs =shipper_jobs)
 
 @app.route('/carrier_update', methods = ['GET', 'POST'])
 def update_carrier():
@@ -167,6 +166,8 @@ def delete_carrier():
     flash('Your account has been deleted', category='success')
     return redirect('/')
 
+
+# ROUTES RELATING TO SHIPPER
 @app.route('/shipper_dashboard')
 def shipperDash():
     if 'user_firstName' not in session or session['user_type'] != 'shipper':
@@ -226,11 +227,10 @@ def shipper_job():
 def shipper_job_list():
     if 'user_firstName' not in session or session['user_type'] != 'shipper':
         return redirect('/login')
-    print(session)
+    
     shippers_jobs = database.select_many(f"SELECT * FROM jobs WHERE shipper_id={session['user_id']} ORDER BY id DESC")
 
     return render_template('shipper_job.html', shippers_jobs = shippers_jobs)
     
-
 if __name__ == "__main__":
     app.run

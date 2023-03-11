@@ -9,4 +9,38 @@
 <form action='/carrier_update'>
 <input class="btn btn-secondary" type="submit" value= "Update profile">
 </form>
+
+<div class="container">
+    <h1 class='text-center'>All available jobs</h1>
+    <div class="row justify-content-center col-md-8 table">
+        <div class="col-md-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Shipper</th>
+                        <th>type</th>
+                        <th>Weight</th>
+                        <th>Pick up</th>
+                        <th>Drop off</th>
+                        <th>Email</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for shipper_job in shipper_jobs%}
+                    <tr>
+                        <td>{{ shipper_job.companyname }}</td>
+                        <td>{{ shipper_job.type}}</td>
+                        <td>{{ shipper_job.weight }}</td>
+                        <td>{{ shipper_job.pick_up }}</td>
+                        <td>{{ shipper_job.drop_off }}</td>
+                        <td>{{ shipper_job.email }}</td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {%endblock%}

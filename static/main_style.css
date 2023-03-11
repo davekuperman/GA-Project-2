@@ -12,8 +12,9 @@ body {
 }
 
 #frelper{
-    font-size: 70px;    
+    font-size: 75px;    
     border-top: 10px;
+    font-weight: 900;
 }
 
 #profile_pics{
