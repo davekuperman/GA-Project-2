@@ -1,0 +1,12 @@
+{% extends 'layout.html'%}
+{% block title%}Find a Subby {%endblock%}
+
+{%block main%}
+
+<h1>CARRIER DASHBOARD</h1>
+<h2>Welcome, {{ session.user_firstName }}!</h2>
+<p>This is your carrier dashboard.</p>
+<form action='/carrier_update'>
+<input class="btn btn-secondary" type="submit" value= "Update profile">
+</form>
+{%endblock%}

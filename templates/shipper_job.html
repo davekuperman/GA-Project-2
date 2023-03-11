@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block title%}SHIPPER JOB{%endblock%}
+
+{%block main%}
+<form action="/shipper_dashboard">
+    <button class="btn btn-secondary" type="submit">Back to dashboard</button>
+</form>
+<h1>JOB LIST</h1>
+{% if shippers_jobs %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Weight</th>
+                <th>Pick-up</th>
+                <th>Drop-off</th>
+                <th>Suburb</th>
+                <th>State</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in shippers_jobs %}
+                <tr>
+                    <td>{{ job['id'] }}</td>
+                    <td>{{ job['type'] }}</td>
+                    <td>{{ job['weight'] }}</td>
+                    <td>{{ job['pick_up'] }}</td>
+                    <td>{{ job['drop_off'] }}</td>
+                    <td>{{ job['suburb'] }}</td>
+                    <td>{{ job['state'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You have not posted any jobs yet.</p>
+{% endif %}
+
+
+{%endblock%}
+

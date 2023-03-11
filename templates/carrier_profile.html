@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{carrier.companyame}}{% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <h1 class="text-center mb-4">{{ carrier.companyname }}</h1>
+  
+    <div class="row justify-content-center mb-4">
+      <div class="col-md-4">
+        <img src="{{ carrier.profile_pic }}" alt="Profile Picture" class="img-fluid rounded-circle">
+      </div>
+    </div>
+  
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <table class="table">
+          <tbody>
+            <tr>
+              <th scope="row">Company Name</th>
+              <td>{{ carrier.companyname }}</td>
+            </tr>
+            <tr>
+              <th scope="row">First Name</th>
+              <td>{{ carrier.firstname }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Last Name</th>
+              <td>{{ carrier.lastname }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Email</th>
+              <td>{{ carrier.email }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Phone Number</th>
+              <td>{{ carrier.phonenumber }}</td>
+            </tr>
+          </tbody>
+        </table>
+  
+        <a href="{{ url_for(session['user_type'] + 'Dash') }}" class="btn btn-primary">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+  
+
+{% endblock %}

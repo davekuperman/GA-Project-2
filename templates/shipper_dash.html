@@ -1,0 +1,43 @@
+{% extends 'layout.html'%}
+{% block title%}Shipper Dashboard {%endblock%}
+
+{%block main%}
+
+<h1 class='text-center'>SHIPPER DASHBOARD</h1>
+<h2 class='text-center'>Welcome, {{ session.user_firstName }}!</h2>
+<p class='text-center'>This is your shipper dashboard.</p>
+<div class="form-group"></div>
+<button class="btn btn-primary"><a class="text-white" href="/shipper_job">POST A NEW JOB</a></button>
+<button class="btn btn-primary"><a class="text-white" href="/shipper_job_list">View posted jobs</a></button>
+
+</div>
+<div class="container">
+    <h1 class='text-center'>All Carriers</h1>
+    <div class="row justify-content-center col-md-8 table">
+        <div class="col-md-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Company Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for carrier in carriers %}
+                    <tr>
+                        <td>{{ carrier.firstname }}</td>
+                        <td>{{ carrier.lastname }}</td>
+                        <td>{{ carrier.email }}</td>
+                        <td>{{ carrier.phonenumber }}</td>
+                        <td><a href="/carrier_profile?id={{ carrier.id }}">{{ carrier.companyname }}</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{%endblock%}
